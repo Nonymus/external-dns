@@ -308,17 +308,17 @@ func (sc *serviceSource) extractHeadlessEndpoints(svc *v1.Service, hostname stri
 			for _, headlessDomain := range headlessDomains {
 				var ep string
 				if sc.publishHostIP && externalIp {
-					node, err := sc.nodeInformer.Lister().Get(v.Spec.NodeName)
+					node, err := sc.nodeInformer.Lister().Get(pod.Spec.NodeName)
 					if err != nil {
 						return nil
 					}
-					if v.Status.Phase == v1.PodRunning {
+					if pod.Status.Phase == v1.PodRunning {
 						for _, x := range node.Status.Addresses {
 							if x.Type == v1.NodeExternalIP {
 								ep = x.Address
 								log.Debugf("Generating matching endpoint %s with NodeExternalIP %s", headlessDomain, x.Address)
 							} else {
-								log.Debugf("Pod %s is not in running phase", v.Spec.Hostname)
+								log.Debugf("Pod %s is not in running phase", pod.Spec.Hostname)
 							}
 						}
 					}
